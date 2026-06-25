@@ -313,13 +313,13 @@ if submitted:
         "nausea_vomiting":int(nausea_vomiting),
         "dizziness":int(dizziness),
         "skin_rash":int(skin_rash),
-        "temprature_level": temp_map.get(temprature_level, 1),
+        "temperature_level": temp_map.get(temperature_level, 1),
         "heart_rate_level": hr_map.get(heart_rate_level, 1),
         "duration": dur_map.get(duration, 1),
         "asthma": int(asthma),
         "hypertension": int(hypertension),
         "heart_disease": int(heart_disease),
-        "chief_complanationt": cc_map.get(chief_complaint, 9),
+        "chief_complaint": cc_map.get(chief_complaint, 9),
 
     }]
    )
