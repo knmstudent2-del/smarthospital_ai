@@ -299,8 +299,8 @@ with st.form("triage_form"):
 # ── Result ────────────────────────────────────────────────────────────────────
 if submitted:
 
-   # === Code Here ===
-   patients = pd.DataFrame(
+    # === Code Here ===
+    patients = pd.DataFrame(
     [{
         "age": age,
         "gender":gender_map.get(gender, 0),
