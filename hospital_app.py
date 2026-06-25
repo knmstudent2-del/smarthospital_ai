@@ -5,8 +5,10 @@ import pickle
 import os
 
 st.set_page_config(
-    page_title="Smart Hospital Patient Navigator by Mr. Halip", page_icon="🏥", layout="wide"
+    page_title="Smart Hospital Patient Navigator by Athaya", page_icon="🏥", layout="wide"
 )
+
+#bagian style css
 
 st.markdown(
     """
@@ -43,6 +45,22 @@ div[data-testid="stCheckbox"] label {
 @st.cache_resource
 
 # === Code Here ===
+
+def load_model():
+    with open("hospital_model_purplegaze.pkl","rb") as f:
+        return pickle.load(f)
+
+bundle = load_mode()
+model = bundle["model"]
+scaler = bundle["scaler"]
+features = bundle["features"]
+cols_to_scale = bundle["cols_to_scale"]
+debt_map_inv = bundle["debt_map_inv"]
+gender_map = bundle["gender_map"]
+temp_map = bundle["temp_map"]
+hr_map = bundle["hr_map"]
+dur_map = bundle["dur_map"]
+cc_map = bundle["cc_map"]
 
 
 DEPT_INFO = {
@@ -131,7 +149,7 @@ st.markdown(
     </div>
     <div style="font-size:36px;font-weight:700;color:#ffffff;margin-bottom:12px;
                 letter-spacing:-0.02em;">
-        Smart Hospital Patient Navigator by Mr. Halip
+        Smart Hospital Patient Navigator by Athaya
     </div>
     <div style="font-size:18px;color:rgba(255,255,255,0.85);font-weight:400;">
         Find the Right Department for Your Symptoms
@@ -282,6 +300,42 @@ with st.form("triage_form"):
 if submitted:
 
    # === Code Here ===
+   patients = pd.DataFrame(
+    [{
+        "age": age,
+        "gender":gender_map.get(gender, 0),
+        "fever":int(fever),
+        "cough":int(cough),
+        "headache":int(headache),
+        "chest_pain":int(chest_pain),
+        "stomach_pain":int(stomach_pain),
+        "shortness_breath":int(shortness_breath),
+        "nausea_vomiting":int(nausea_vomiting),
+        "dizziness":int(dizziness),
+        "skin_rash":int(skin_rash),
+        "temprature_level": temp_map.get(temprature_level, 1),
+        "heart_rate_level": hr_map.get(heart_rate_level, 1),
+        "duration": dur_map.get(duration, 1),
+        "asthma": int(asthma),
+        "hypertension": int(hypertension),
+        "heart_disease": int(heart_disease),
+        "chief_complanationt": cc_map.get(chief_complaint, 9),
+
+    }]
+   )
+
+
+   patient_scaled = patient.copy(
+    patient_scaled[cols_to_scale] = scaler.transform(patient[cols_to_scale])
+
+    pred       = model.predict(patient_scaled[features])[0]
+    proba      = model.predict_proba(patient_scaled[features])[0]
+    dept_name  = dept_map_inv[pred]
+    confidence = proba[pred] * 100
+    info = DEPT_INFO[dept_name]
+   )
+
+
 
 
 
